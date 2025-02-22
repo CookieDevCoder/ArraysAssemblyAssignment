@@ -76,7 +76,7 @@ manager:
     mov     rax, 0
     mov     rdi, floats_array
     mov     rsi, totalnumbers
-    ;call    input_array
+    call    input_array
 
     ; Read Numbers
     mov     rax, 0

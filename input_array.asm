@@ -26,14 +26,14 @@
 
 global input_array
 
-extern fgets
 extern scanf
 extern isfloat
-extern stdin
+extern printf
 extern atof
 
 segment .data
     stringform db "%s", 0
+    invalidNotice db "Input is invalid, please input a float value.", 10, 0
 segment .bss
     buffer  resb 64
 segment .text
@@ -82,15 +82,9 @@ read_input:
     mov     rdi, buffer
     call    isfloat
 
-    ; rax hold 0(false) or 1(true)
+    ; rax hold 0(false) or non-zero(true)
     cmp    rax, 0
     je     invalid_input
-
-    ; Check if input is float using isfloat.asm
-    mov     rdi, buffer
-    call    isfloat
-    test    eax, eax
-    jle     invalid_input
 
     ; convert string to double
     mov     rax, 0
@@ -98,6 +92,14 @@ read_input:
     call    atof        ; xmm0 contains double
 
     movsd   [r12 + 8 * r14], xmm0
+    inc     r14
+    jmp     endloop
+
+invalid_input:
+    mov     rax, 0
+    mov     rdi, invalidNotice
+    call    printf
+    jmp     read_input
 
 endloop:
     ; Restore the general purpose registers
