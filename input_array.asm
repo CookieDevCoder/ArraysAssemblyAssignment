@@ -60,7 +60,7 @@ input_array:
 
     ; Recieve the array
     mov     r12, rdi    ; array
-    mov     r13, rsi    ; length of array
+    mov     r13, rsi    ; capacity of array
     xor     r14, r14    ; index
 
     ; reading input
@@ -106,7 +106,7 @@ invalid_input:
     jmp     read_input
 
 endloop:
-    mov     rax, r12
+    mov     rax, r14
     ; Restore the general purpose registers
     popf          
     pop     r15

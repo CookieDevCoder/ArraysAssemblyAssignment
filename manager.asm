@@ -38,6 +38,7 @@ segment .data
 
 segment .bss
     floats_array resq 128   ; space for 128 floats
+    array_length resq 1     ; the length of the array
 
 segment .text
 manager:
@@ -79,7 +80,7 @@ manager:
     call    input_array
 
     ; Store the array in the floats array
-    mov     floats_array, rax
+    mov     array_length, rax
 
     ; show inputted values
     mov     rax, 0
@@ -89,6 +90,7 @@ manager:
     ; print Numbers using output_array
     mov     rax, 0
     mov     rdi, floats_array
+    mov     rsi, array_length
     call    output_array
 
     ; Restore the general purpose registers

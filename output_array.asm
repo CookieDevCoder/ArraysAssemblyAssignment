@@ -26,10 +26,12 @@
 
 global output_array
 
+extern printf
+
 segment .data
-
+    floatform db "%lf", 0
 segment .bss
-
+    ; Empty
 segment .text
 output_array:
     ; Save the base pointer
@@ -52,8 +54,29 @@ output_array:
     push    r15
     pushf
 
-    ;Write Code Here
+    ; set values
+    mov     r8, rdi     ; array
+    mov     r9, rsi     ; length of array
+    xor     r10,r10     ; index
 
+    ; Print Each value in array until end of array
+printLoop:
+    ; Test if index is greater than or equal to length, if so, end loop
+    cmp     r10, r9
+    jge     endprintloop
+
+    ; print current index
+    mov     rax, 0
+    mov     rdi, floatform
+    mov     rsi, [r8 + 8 * r10]
+    call    printf
+
+    ; Move to next value
+    inc     r10
+    jmp     printLoop
+
+
+endprintloop:
     ; Restore the general purpose registers
     popf          
     pop     r15
