@@ -77,6 +77,10 @@ read_input:
     mov     rsi, buffer
     call    scanf
 
+    ; Check for Enter + ctrl+D input, 0 means EOF
+    cmp     rax, 0
+    je      endloop
+
     ; Validate String
     mov     rax, 0
     mov     rdi, buffer
@@ -93,7 +97,7 @@ read_input:
 
     movsd   [r12 + 8 * r14], xmm0
     inc     r14
-    jmp     endloop
+    jmp     read_input
 
 invalid_input:
     mov     rax, 0
@@ -102,6 +106,7 @@ invalid_input:
     jmp     read_input
 
 endloop:
+    mov     rax, r12
     ; Restore the general purpose registers
     popf          
     pop     r15

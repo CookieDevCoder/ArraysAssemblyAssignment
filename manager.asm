@@ -38,7 +38,6 @@ segment .data
 
 segment .bss
     floats_array resq 128   ; space for 128 floats
-    totalnumbers resq 1     ; stores the total count of numbers
 
 segment .text
 manager:
@@ -73,16 +72,24 @@ manager:
     mov     rdi, askforfloats
     call    printf
 
+    ;Read input using input_array.asm
     mov     rax, 0
     mov     rdi, floats_array
-    mov     rsi, totalnumbers
+    mov     rsi, 128
     call    input_array
 
-    ; Read Numbers
+    ; Store the array in the floats array
+    mov     floats_array, rax
+
+    ; show inputted values
     mov     rax, 0
     mov     rdi, inputnotice
     call    printf
-    ;call output_array
+
+    ; print Numbers using output_array
+    mov     rax, 0
+    mov     rdi, floats_array
+    call    output_array
 
     ; Restore the general purpose registers
     popf          

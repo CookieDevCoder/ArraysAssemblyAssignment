@@ -55,13 +55,16 @@ swap:
     pushf
 
     ; mov x and y to xmm10 and xmm11 registers
-    movsd   xmm10, xmm0
-    movsd   xmm11, xmm1
+    movsd   xmm10, [rdi]
+    movsd   xmm11, [rsi]
 
     ; Swap using XOR
     xorpd   xmm10, xmm11
     xorpd   xmm11, xmm10
     xorpd   xmm10, xmm11
+
+    movsd [rsi], xmm11
+    movsd [rdi], xmm10
 
     ; Restore the general purpose registers
     popf          
