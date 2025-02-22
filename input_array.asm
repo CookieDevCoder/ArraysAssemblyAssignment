@@ -58,12 +58,17 @@ input_array:
     push    r15
     pushf
 
-    ; initailize eax and count
-    xor     eax, eax
-    mov     dword [count], 0
+    ; Recieve the array
+    mov     r12, rdi    ; array
+    mov     r13, rsi    ; length of array
+    xor     r14, r14    ; index
 
     ; reading input
 read_input:
+
+    ; Check if array has room
+    cmp     r14, r13
+    jge     endloop
 
 
     ; Scan for string
@@ -77,7 +82,7 @@ read_input:
     mov     rdi, buffer
     call    isfloat
 
-    ; rax hold 0(false) or nonzero(true)
+    ; rax hold 0(false) or 1(true)
     cmp    rax, 0
     je     invalid_input
 
@@ -92,8 +97,9 @@ read_input:
     mov     rdi, buffer
     call    atof        ; xmm0 contains double
 
-    movsd   [rcx + 8 * r9], xmm0
+    movsd   [r12 + 8 * r14], xmm0
 
+endloop:
     ; Restore the general purpose registers
     popf          
     pop     r15
@@ -109,31 +115,6 @@ read_input:
     pop     rdx
     pop     rcx
     pop     rbx
-
-    ; Return result
-    pop     rbp
-    mov rax, 1
-    ret
-
-invalid_input:
-    ; Restore the general purpose registers
-    popf          
-    pop     r15
-    pop     r14
-    pop     r13
-    pop     r12
-    pop     r11
-    pop     r10
-    pop     r9 
-    pop     r8 
-    pop     rdi
-    pop     rsi
-    pop     rdx
-    pop     rcx
-    pop     rbx
-
-    ; Return result
     pop     rbp
 
-    mov rax, 0
     ret
