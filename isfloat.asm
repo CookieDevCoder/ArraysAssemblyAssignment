@@ -1,4 +1,4 @@
-;  Program name: "Array Assignment". Stores various float values into an array
+;  Program name: "Array Assignment". Stores various float values into an array and returns the mean
 ;  Copyright (C) 2025  Brian Ayala
 
 ;  This file is part of the software program "Array Assignment".
@@ -25,8 +25,10 @@
 ;  For research purpose only. Please don't copy word for word. Avoid academic dishonesty. 
 
 global isfloat
+extern scanf
 
 segment .data
+floatform db "%lf", 0
 
 segment .bss
 
@@ -52,7 +54,15 @@ isfloat:
     push    r15
     pushf
 
-    ;Write Code Here
+    ; use scanf to return a float
+    mov     rax, 0
+    mov     rsi, rdi
+    mov     rdi, floatform
+    call    scanf
+
+    ; Check if float value was successfully extracted
+    test    eax, eax
+    movxz   eax, al
 
     ; Restore the general purpose registers
     popf          
@@ -72,4 +82,5 @@ isfloat:
 
     ; Return result
     pop     rbp
+
     ret

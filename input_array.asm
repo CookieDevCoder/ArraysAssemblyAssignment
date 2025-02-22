@@ -1,4 +1,4 @@
-;  Program name: "Array Assignment". Stores various float values into an array
+;  Program name: "Array Assignment". Stores various float values into an array and returns the mean
 ;  Copyright (C) 2025  Brian Ayala
 
 ;  This file is part of the software program "Array Assignment".
@@ -28,12 +28,14 @@ global input_array
 
 extern fgets
 extern scanf
+extern isfloat
 extern stdin
+extern atof
 
 segment .data
-    float_scan db "%lf", 0
+    stringform db "%s", 0
 segment .bss
-
+    buffer  resb 64
 segment .text
 input_array:
     ; Save the base pointer
@@ -56,8 +58,41 @@ input_array:
     push    r15
     pushf
 
-    ; Start Reading Inputs
-    
+    ; initailize eax and count
+    xor     eax, eax
+    mov     dword [count], 0
+
+    ; reading input
+read_input:
+
+
+    ; Scan for string
+    mov     rax, 0
+    mov     rdi, stringform
+    mov     rsi, buffer
+    call    scanf
+
+    ; Validate String
+    mov     rax, 0
+    mov     rdi, buffer
+    call    isfloat
+
+    ; rax hold 0(false) or nonzero(true)
+    cmp    rax, 0
+    je     invalid_input
+
+    ; Check if input is float using isfloat.asm
+    mov     rdi, buffer
+    call    isfloat
+    test    eax, eax
+    jle     invalid_input
+
+    ; convert string to double
+    mov     rax, 0
+    mov     rdi, buffer
+    call    atof        ; xmm0 contains double
+
+    movsd   [rcx + 8 * r9], xmm0
 
     ; Restore the general purpose registers
     popf          
@@ -77,4 +112,28 @@ input_array:
 
     ; Return result
     pop     rbp
+    mov rax, 1
+    ret
+
+invalid_input:
+    ; Restore the general purpose registers
+    popf          
+    pop     r15
+    pop     r14
+    pop     r13
+    pop     r12
+    pop     r11
+    pop     r10
+    pop     r9 
+    pop     r8 
+    pop     rdi
+    pop     rsi
+    pop     rdx
+    pop     rcx
+    pop     rbx
+
+    ; Return result
+    pop     rbp
+
+    mov rax, 0
     ret

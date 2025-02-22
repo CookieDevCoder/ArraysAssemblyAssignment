@@ -1,4 +1,4 @@
-;  Program name: "Array Assignment". Stores various float values into an array
+;  Program name: "Array Assignment". Stores various float values into an array and returns the mean
 ;  Copyright (C) 2025  Brian Ayala
 
 ;  This file is part of the software program "Array Assignment".

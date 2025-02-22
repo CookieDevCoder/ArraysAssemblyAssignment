@@ -1,4 +1,6 @@
-#  Program name: "Array Assignment". Stores various float values into an array
+#!/bin/bash
+
+#  Program name: "Array Assignment". Stores various float values into an array and returns the mean
 #  Copyright (C) 2025  Brian Ayala
 
 #  This file is part of the software program "Array Assignment".
@@ -31,5 +33,5 @@ nasm -f elf64 sum.asm -o sum.o
 nasm -f elf64 swap.asm -o swap.o
 nasm -f elf64 isfloat.asm -o isfloat.o
 gcc -c sort.c -o sort.o
-g++ main.cpp manager.o input_array.o output_array.o sum.o sort.o swap.o isfloat.o -o mean -no-pie
-./mean
+g++ main.cpp manager.o input_array.o output_array.o sum.o sort.o swap.o isfloat.o -o mean.out -no-pie
+./mean.out

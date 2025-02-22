@@ -1,4 +1,4 @@
-;  Program name: "Array Assignment". Stores various float values into an array
+;  Program name: "Array Assignment". Stores various float values into an array and returns the mean
 ;  Copyright (C) 2025  Brian Ayala
 
 ;  This file is part of the software program "Array Assignment".
@@ -23,13 +23,15 @@
 ;    Author CWID : 884641556
 
 ;  For research purpose only. Please don't copy word for word. Avoid academic dishonesty. 
+;  Call example
+;  void swap(double x, double)
 
 global swap
 
 segment .data
-
+    ; empty
 segment .bss
-
+    ; empty
 segment .text
 swap:
     ; Save the base pointer
@@ -52,7 +54,14 @@ swap:
     push    r15
     pushf
 
-    ;Write Code Here
+    ; mov x and y to xmm10 and xmm11 registers
+    movsd   xmm10, xmm0
+    movsd   xmm11, xmm1
+
+    ; Swap using XOR
+    xorpd   xmm10, xmm11
+    xorpd   xmm11, xmm10
+    xorpd   xmm10, xmm11
 
     ; Restore the general purpose registers
     popf          
