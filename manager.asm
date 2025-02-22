@@ -80,7 +80,7 @@ manager:
     call    input_array
 
     ; Store the array in the floats array
-    mov     array_length, rax
+    mov     [array_length], rax
 
     ; show inputted values
     mov     rax, 0

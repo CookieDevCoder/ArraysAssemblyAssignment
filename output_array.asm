@@ -30,6 +30,7 @@ extern printf
 
 segment .data
     floatform db "%lf", 0
+    newline db 10, 0
 segment .bss
     ; Empty
 segment .text
@@ -77,6 +78,11 @@ printLoop:
 
 
 endprintloop:
+    ; print newline character
+    mov     rax, 0
+    mov     rdi, newline
+    call    printf
+
     ; Restore the general purpose registers
     popf          
     pop     r15
