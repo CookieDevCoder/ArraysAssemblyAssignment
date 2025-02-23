@@ -30,17 +30,20 @@ extern printf
 extern input_array
 extern output_array
 extern sum
+extern sort
 
 segment .data
     intro db "This Program will manage your sequence of 64-bit floats", 10, "For the array enter a sequence of 64-bit floats separated by white space.", 10, 0
     askforfloats db "After the last input, press enter followed by ctrl+D:", 10, 0
     inputnotice db "These numbers were recieved and placed into an array", 10, 0
-    sumnotice db "The Mean of the numbers in the array is %lf", 10, 0
+    sumnotice db "The Sum of the numbers in the array is %lf", 10, 0
+    meannotice db "The Mean of the numbers in the array is %lf", 10, 0
 
 segment .bss
     floats_array resq 128   ; space for 128 floats
     array_length resb 1     ; the length of the array
     array_sum resb 1        ; the sum of all floats in array
+    array_mean resb 1       ; the mean of the array
 
 segment .text
 manager:
@@ -110,11 +113,19 @@ manager:
     movsd   xmm0, [array_sum]
     call    printf
 
-    ; Calculate mean using mean.asm
-    mov     rax, 0
-    lea     rdi, [floats_array]
-    mov     rsi, [array_length]
-    call    mean         ; xmm0 = mean
+    ; Calculate mean using previous gained sum
+    movsd   xmm0, [array_sum]
+    divsd   xmm0, [array_length]    ; sum / length = mean
+    movsd   [array_mean], xmm0      ; save mean for later use
+
+    ; Print mean to user
+    mov     rax, 1
+    mov     rdi, meannotice
+    movsd   xmm0, [array_mean]
+    call    printf
+
+    ; Sort the array using sort.c
+    
 
     ; Restore the general purpose registers
     popf          
