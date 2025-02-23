@@ -47,7 +47,7 @@ segment .bss
     sorted_array resq 128   ; space for 128 floats
     array_length resb 4     ; the length of the array
     array_sum resb 4        ; the sum of all floats in array
-    array_mean resb 4       ; the mean of the array
+    array_mean resb 1       ; the mean of the array
 
 segment .text
 manager:
@@ -117,15 +117,13 @@ manager:
     movsd   xmm0, [array_sum]
     call    printf
 
-
     ; Convert length from int to float
-    mov     rax, [array_length]
-    cvtsi2sd xmm0,rax
+    cvtsi2sd xmm1, [array_length]
 
     ; Calculate mean using previous gained sum
-    movsd   xmm1, [array_sum]
-    divsd   xmm1, xmm0              ; sum / length = mean
-    movsd   [array_mean], xmm1      ; save mean for later use
+    movsd   xmm0, [array_sum]
+    divsd   xmm0, xmm1              ; sum / length = mean
+    movsd   [array_mean], xmm0      ; save mean for later use
 
     ; Print mean to user
     mov     rax, 1
@@ -144,11 +142,16 @@ manager:
     mov     rdi, inputnotice
     call    printf
 
+    
+
     ; print Numbers using output_array
     mov     rax, 0
     lea     rdi, [floats_array]
     mov     rsi, [array_length]
     call    output_array
+
+    ; Return mean to main
+    movsd   xmm0, [array_mean]
 
     ; Restore the general purpose registers
     popf          

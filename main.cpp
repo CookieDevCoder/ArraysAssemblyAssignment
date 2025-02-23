@@ -26,12 +26,12 @@
 
 #include <iostream>
 
-extern "C" float manager();
+extern "C" double manager();
 
 int main() {
     std::cout << "Welcome to Arrays of floating point numbers,\nBrought to you by Brian Ayala\n\n";
 
-    float average = manager();
+    double average = manager();
 
     std::cout << "Main recieved " << average << ", and will keep it for future use\n";
     std::cout << "Main Will now return 0 to the Operating System. Bye!\n";
