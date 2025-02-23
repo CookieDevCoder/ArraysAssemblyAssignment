@@ -64,15 +64,6 @@ output_array:
 
     ; Print Each value in array until end of array
 printLoop:
-
-    ; print current index
-    ;mov     rax, 0
-    ;mov     rdi, intform
-    ;mov     rsi, r9
-    ;call    printf
-
-    ;mov     r10, [outputindex]
-
     ; Test if index is greater than or equal to length, if so, end loop
     cmp     r15, r14
     jge     endprintloop

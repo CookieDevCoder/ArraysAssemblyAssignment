@@ -31,6 +31,7 @@ extern input_array
 extern output_array
 extern sum
 extern sort
+extern atof
 
 segment .data
     intro db "This Program will manage your sequence of 64-bit floats", 10, "For the array enter a sequence of 64-bit floats separated by white space.", 10, 0
@@ -39,11 +40,14 @@ segment .data
     sumnotice db "The Sum of the numbers in the array is %lf", 10, 0
     meannotice db "The Mean of the numbers in the array is %lf", 10, 0
 
+    debugint db "The length is %d", 10, 0
+
 segment .bss
     floats_array resq 128   ; space for 128 floats
-    array_length resb 1     ; the length of the array
-    array_sum resb 1        ; the sum of all floats in array
-    array_mean resb 1       ; the mean of the array
+    sorted_array resq 128   ; space for 128 floats
+    array_length resb 4     ; the length of the array
+    array_sum resb 4        ; the sum of all floats in array
+    array_mean resb 4       ; the mean of the array
 
 segment .text
 manager:
@@ -113,10 +117,15 @@ manager:
     movsd   xmm0, [array_sum]
     call    printf
 
+
+    ; Convert length from int to float
+    mov     rax, [array_length]
+    cvtsi2sd xmm0,rax
+
     ; Calculate mean using previous gained sum
-    movsd   xmm0, [array_sum]
-    divsd   xmm0, [array_length]    ; sum / length = mean
-    movsd   [array_mean], xmm0      ; save mean for later use
+    movsd   xmm1, [array_sum]
+    divsd   xmm1, xmm0              ; sum / length = mean
+    movsd   [array_mean], xmm1      ; save mean for later use
 
     ; Print mean to user
     mov     rax, 1
@@ -125,7 +134,21 @@ manager:
     call    printf
 
     ; Sort the array using sort.c
-    
+    mov     rax, 0
+    lea     rdi, [floats_array]
+    mov     rsi, [array_length]
+    call    sort            ; updates floats_array
+
+    ; alert user of sort
+    mov     rax, 0
+    mov     rdi, inputnotice
+    call    printf
+
+    ; print Numbers using output_array
+    mov     rax, 0
+    lea     rdi, [floats_array]
+    mov     rsi, [array_length]
+    call    output_array
 
     ; Restore the general purpose registers
     popf          

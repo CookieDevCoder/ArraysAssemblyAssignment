@@ -23,3 +23,15 @@
 //    Author CWID : 884641556
 
 //  For research purpose only. Please don't copy word for word. Avoid academic dishonesty. 
+
+extern void swap(double* x, double* y);
+
+void sort(double *array, int length) {
+    for(int i = 0; i < length - 1; i++) {
+        for (int j = 0; j < length - i - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                swap(&array[j], &array[j + 1]);
+            }
+        }
+    }
+}
