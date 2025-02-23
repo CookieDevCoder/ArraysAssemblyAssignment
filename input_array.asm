@@ -33,6 +33,7 @@ extern atof
 
 segment .data
     stringform db "%s", 0
+    floatform db "%lf", 10, 0
     invalidNotice db "Input is invalid, please input a float value.", 10, 0
 segment .bss
     buffer  resb 64
@@ -65,11 +66,10 @@ input_array:
 
     ; reading input
 read_input:
-
+        
     ; Check if array has room
     cmp     r14, r13
     jge     endloop
-
 
     ; Scan for string
     mov     rax, 0
@@ -77,8 +77,8 @@ read_input:
     mov     rsi, buffer
     call    scanf
 
-    ; Check for Enter + ctrl+D input, 0 means EOF
-    cmp     rax, 0
+    ; Check for Enter + ctrl+D input, -1 means EOF
+    cmp     eax, -1
     je      endloop
 
     ; Validate String
@@ -107,6 +107,7 @@ invalid_input:
 
 endloop:
     mov     rax, r14
+
     ; Restore the general purpose registers
     popf          
     pop     r15

@@ -51,7 +51,28 @@ sum:
     push    r15
     pushf
 
-    ;Write Code Here
+    ; Set registers
+    mov     r13, rdi    ; array
+    mov     r14, rsi    ; length of array
+    xor     r15, r15    
+    inc     r15         ; index initialized to 1
+    movsd   xmm0, [rdi] ; first element of array
+
+sumloop:
+
+    ; Check Index for overflow
+    cmp     r15, r14
+    jge     endsumloop
+
+    ; Add current iteration to sum
+    movsd   xmm1, [rdi + 8 * r15]   ;xmm1 = current float iteration
+    addsd   xmm0, xmm1
+
+    ; Move to next value
+    inc     r15
+    jmp     sumloop
+
+endsumloop:
 
     ; Restore the general purpose registers
     popf          

@@ -29,6 +29,7 @@ global manager
 extern printf
 extern input_array
 extern output_array
+extern sum
 
 segment .data
     intro db "This Program will manage your sequence of 64-bit floats", 10, "For the array enter a sequence of 64-bit floats separated by white space.", 10, 0
@@ -38,7 +39,8 @@ segment .data
 
 segment .bss
     floats_array resq 128   ; space for 128 floats
-    array_length resq 1     ; the length of the array
+    array_length resb 1     ; the length of the array
+    array_sum resb 1        ; the sum of all floats in array
 
 segment .text
 manager:
@@ -75,12 +77,12 @@ manager:
 
     ;Read input using input_array.asm
     mov     rax, 0
-    mov     rdi, floats_array
+    lea     rdi, [floats_array]
     mov     rsi, 128
     call    input_array
 
     ; Store the array in the floats array
-    mov     [array_length], rax
+    mov     [array_length], rax     ; rax = length
 
     ; show inputted values
     mov     rax, 0
@@ -89,9 +91,30 @@ manager:
 
     ; print Numbers using output_array
     mov     rax, 0
-    mov     rdi, floats_array
-    mov     rsi, array_length
+    lea     rdi, [floats_array]
+    mov     rsi, [array_length]
     call    output_array
+
+    ; Calculate sum using sum.asm
+    mov     rax, 0
+    lea     rdi, [floats_array]
+    mov     rsi, [array_length]
+    call    sum         ; xmm0 = sum
+
+    ; store sum for later use
+    movsd   [array_sum], xmm0
+
+    ; print sum of array
+    mov     rax, 1
+    mov     rdi, sumnotice
+    movsd   xmm0, [array_sum]
+    call    printf
+
+    ; Calculate mean using mean.asm
+    mov     rax, 0
+    lea     rdi, [floats_array]
+    mov     rsi, [array_length]
+    call    mean         ; xmm0 = mean
 
     ; Restore the general purpose registers
     popf          

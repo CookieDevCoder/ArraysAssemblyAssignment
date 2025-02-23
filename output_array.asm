@@ -29,9 +29,11 @@ global output_array
 extern printf
 
 segment .data
-    floatform db "%lf", 0
+    floatform db "%lf ", 0
     newline db 10, 0
+    testvalue dq 3.24525
 segment .bss
+    outputindex resb 1
     ; Empty
 segment .text
 output_array:
@@ -56,24 +58,33 @@ output_array:
     pushf
 
     ; set values
-    mov     r8, rdi     ; array
-    mov     r9, rsi     ; length of array
-    xor     r10,r10     ; index
+    mov     r13, rdi     ; array
+    mov     r14, rsi     ; length of array
+    xor     r15, r15     ; index initialized to 0
 
     ; Print Each value in array until end of array
 printLoop:
+
+    ; print current index
+    ;mov     rax, 0
+    ;mov     rdi, intform
+    ;mov     rsi, r9
+    ;call    printf
+
+    ;mov     r10, [outputindex]
+
     ; Test if index is greater than or equal to length, if so, end loop
-    cmp     r10, r9
+    cmp     r15, r14
     jge     endprintloop
 
     ; print current index
-    mov     rax, 0
+    mov     rax, 1
     mov     rdi, floatform
-    mov     rsi, [r8 + 8 * r10]
+    movsd   xmm0, [r13 + 8 * r15]
     call    printf
 
     ; Move to next value
-    inc     r10
+    inc     r15
     jmp     printLoop
 
 
