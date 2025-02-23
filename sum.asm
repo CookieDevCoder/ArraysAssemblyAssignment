@@ -26,9 +26,9 @@
 global sum
 
 segment .data
-
+; Empty
 segment .bss
-
+; Empty
 segment .text
 sum:
     ; Save the base pointer
@@ -52,27 +52,29 @@ sum:
     pushf
 
     ; Set registers
-    mov     r13, rdi    ; array
-    mov     r14, rsi    ; length of array
-    xor     r15, r15    
-    inc     r15         ; index initialized to 1
-    movsd   xmm0, [rdi] ; first element of array
+    mov     r8, rdi    ; array
+    mov     r9, rsi    ; length of array
+    xor     r10, r10    
+    inc     r10         ; index initialized to 1
+    movsd   xmm10, [r8] ; first element of array
 
 sumloop:
 
     ; Check Index for overflow
-    cmp     r15, r14
+    cmp     r10, r9
     jge     endsumloop
 
     ; Add current iteration to sum
-    movsd   xmm1, [rdi + 8 * r15]   ;xmm1 = current float iteration
-    addsd   xmm0, xmm1
+    movsd   xmm11, [r8 + 8 * r10]   ;xmm11 = current float iteration
+    addsd   xmm10, xmm11
 
     ; Move to next value
-    inc     r15
+    inc     r10
     jmp     sumloop
 
 endsumloop:
+    ; return sum to xmm0
+    movsd   xmm0, xmm10
 
     ; Restore the general purpose registers
     popf          

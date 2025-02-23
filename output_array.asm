@@ -31,9 +31,7 @@ extern printf
 segment .data
     floatform db "%lf ", 0
     newline db 10, 0
-    testvalue dq 3.24525
 segment .bss
-    outputindex resb 1
     ; Empty
 segment .text
 output_array:
@@ -65,7 +63,7 @@ output_array:
     ; Print Each value in array until end of array
 printLoop:
     ; Test if index is greater than or equal to length, if so, end loop
-    cmp     r15, r14
+    cmp     r15, r14        ; -side comment: for some reason THIS piece of code doesn't run after calling Sum since the loop never stops, despite r15 = r14
     jge     endprintloop
 
     ; print current index

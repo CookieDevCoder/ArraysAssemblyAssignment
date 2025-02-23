@@ -22,6 +22,8 @@
 //    Author section: 240-09
 //    Author CWID : 884641556
 
+//  Using Visual Studio Code
+
 //  For research purpose only. Please don't copy word for word. Avoid academic dishonesty. 
 
 #include <iostream>
@@ -33,7 +35,7 @@ int main() {
 
     double average = manager();
 
-    std::cout << "Main recieved " << average << ", and will keep it for future use\n";
+    std::cout << "\nMain recieved " << average << ", and will keep it for future use\n";
     std::cout << "Main Will now return 0 to the Operating System. Bye!\n";
     return 0;
 }

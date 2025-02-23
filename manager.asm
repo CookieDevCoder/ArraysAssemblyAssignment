@@ -39,9 +39,7 @@ segment .data
     inputnotice db "These numbers were recieved and placed into an array", 10, 0
     sumnotice db "The Sum of the numbers in the array is %lf", 10, 0
     meannotice db "The Mean of the numbers in the array is %lf", 10, 0
-
-    debugint db "The length is %d", 10, 0
-
+    sortedOutput db "The array has been sorted and are now in this position.", 10, 0
 segment .bss
     floats_array resq 128   ; space for 128 floats
     sorted_array resq 128   ; space for 128 floats
@@ -102,6 +100,23 @@ manager:
     mov     rsi, [array_length]
     call    output_array
 
+    ; Sort the array using sort.c
+    mov     rax, 0
+    lea     rdi, [floats_array]
+    mov     rsi, [array_length]
+    call    sort            ; updates floats_array
+
+    ; alert user of sort
+    mov     rax, 0
+    mov     rdi, sortedOutput
+    call    printf
+
+    ; Show sorted array to User 
+    mov     rax, 0
+    lea     rdi, [floats_array]
+    mov     rsi, [array_length]
+    call    output_array
+
     ; Calculate sum using sum.asm
     mov     rax, 0
     lea     rdi, [floats_array]
@@ -130,25 +145,6 @@ manager:
     mov     rdi, meannotice
     movsd   xmm0, [array_mean]
     call    printf
-
-    ; Sort the array using sort.c
-    mov     rax, 0
-    lea     rdi, [floats_array]
-    mov     rsi, [array_length]
-    call    sort            ; updates floats_array
-
-    ; alert user of sort
-    mov     rax, 0
-    mov     rdi, inputnotice
-    call    printf
-
-    
-
-    ; print Numbers using output_array
-    mov     rax, 0
-    lea     rdi, [floats_array]
-    mov     rsi, [array_length]
-    call    output_array
 
     ; Return mean to main
     movsd   xmm0, [array_mean]
